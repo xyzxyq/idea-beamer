@@ -1,0 +1,376 @@
+% !TeX program = xelatex
+% 编译：latexmk -xelatex -interaction=nonstopmode -halt-on-error main.tex
+\documentclass[aspectratio=169,11pt]{beamer}
+\usepackage{idea-theme}
+
+% ===== 只需先修改这里 =====
+\title[研究 Idea]{研究 Idea 标题}
+\subtitle{用一句话说明：为解决什么问题，提出什么方法}
+\author{汇报人：姓名}
+\institute{课题组 / 学院\quad ·\quad 导师：姓名}
+\date{\today}
+
+\begin{document}
+
+% 01 封面：与内页相同的浅色画布、白色卡片、细边框。
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \begin{scope}[shift={(current page.south west)},x=1cm,y=1cm]
+      \draw[idea panel] (1,1.3) rectangle (15,7.7);
+      \node[anchor=west,inner sep=0,text=IdeaPurple,font=\fontsize{8}{11}\selectfont]
+        at (2,6.75) {研究构想};
+      % 辅助色只作为小型色标，与方法图的配色保持一致。
+      \foreach \xx/\tone in {12.55/IdeaBlue,12.88/IdeaPurple,13.21/IdeaAmber,13.54/IdeaTeal,13.87/IdeaCoral}{
+        \fill[\tone!65!white,rounded corners=.7pt] (\xx,6.65) rectangle ++(.17,.17);
+      }
+      \node[anchor=north west,inner sep=0,text width=12cm,align=left] at (2,5.8) {%
+        {\color{IdeaInk}\fontsize{27}{34}\selectfont\bfseries\inserttitle\par}
+        \vspace{4mm}
+        {\color{IdeaGray}\fontsize{10}{14}\selectfont\insertsubtitle\par}
+      };
+      \draw[IdeaLine,line width=.4pt] (2,2.85)--(14,2.85);
+      \node[anchor=west,inner sep=0,text=IdeaGray,font=\fontsize{9}{12}\selectfont]
+        at (2,2.12) {\insertauthor};
+      \node[anchor=east,inner sep=0,text=IdeaGray,font=\fontsize{8}{11}\selectfont]
+        at (14,2.12) {\insertdate};
+    \end{scope}
+  \end{tikzpicture}
+\end{frame}
+
+\IdeaSection{01}{MOTIVATION}{问题与假设}
+% 02 两张等高卡片：左侧定义，右侧证据。
+\begin{frame}{从一个明确的问题出发}
+  \framesubtitle{研究对象、任务边界与现有方法的关键瓶颈}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.485\textwidth}
+      \IdeaCard[31mm]{01 / TASK}{任务定义}{%
+        给定输入 $x$ 与条件 $c$，\par
+        预测 $y$ 或生成候选 $x^\star$。\par
+        \vspace{3mm}\Hint{研究对象：[填写]\quad 数据范围：[填写]}}
+    \end{column}
+    \begin{column}{.485\textwidth}
+      \IdeaCard[31mm]{02 / GAP}{关键瓶颈}{%
+        [描述最关键的失效情形]\par
+        [说明它对研究目标的影响]\par
+        \vspace{3mm}\Hint{证据来源：[作者，年份，图 / 表]}}
+    \end{column}
+  \end{columns}
+  \vfill
+  \Takeaway{[用一句话定义本研究需要解决的具体问题。]}
+\end{frame}
+
+% 03 核心假设：不是提前宣布有效。
+\begin{frame}{一个可检验的核心假设}
+  \framesubtitle{由问题出发，建立设计机制与预期效果之间的联系}
+  \begin{center}
+  \begin{tikzpicture}
+    \node[idea io,text width=29mm,minimum height=17mm] (a) at (0,0) {已知瓶颈\\[2pt]\textbf{[信息缺失]}};
+    \node[idea solid,text width=36mm,minimum height=17mm] (b) at (4.6,0) {提出干预\\[2pt]\textbf{[引入关键机制]}};
+    \node[idea primary,text width=29mm,minimum height=17mm] (c) at (9.2,0) {预期变化\\[2pt]\textbf{[目标指标改善]}};
+    \draw[idea arrow] (a)--node[idea note,above]{干预}(b);
+    \draw[idea arrow] (b)--node[idea note,above]{检验}(c);
+  \end{tikzpicture}
+  \end{center}
+  \vspace{3mm}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.47\textwidth}
+      \Tag{成立的前提}
+      \small [关键输入可获得；约束合理；评价可信]
+    \end{column}
+    \begin{column}{.47\textwidth}
+      \Tag{否定该假设的证据}
+      \small [移除机制后无差异；域外评价不改善]
+    \end{column}
+  \end{columns}
+  \vfill
+  \Takeaway{[引入什么机制，预期改善什么；在哪种条件下不成立。]}
+\end{frame}
+
+\IdeaSection{02}{METHOD}{方法框架}
+% 04 总框架：白色阶段卡片 + 核心模块强调 + 独立训练反馈。
+\begin{frame}{方法框架}
+  \framesubtitle{蓝色表征、紫色交互、青绿输出；珊瑚色表示训练反馈}
+  \begin{center}
+  \begin{tikzpicture}[y=1.4cm]
+    \node[idea data,text width=11mm,minimum height=12mm] (x) at (0,0) {输入\\$x,c$};
+    \foreach \xx/\num/\en/\tone in {3/A/ENCODE/IdeaBlue,7/B/INTERACT/IdeaPurple,11/C/PREDICT/IdeaTeal}{
+      \draw[idea panel,draw=\tone!25,fill=\tone!3!white] (\xx-1.55,-1.3) rectangle (\xx+1.55,1.5);
+      \node[idea note,anchor=west,text=\tone] at (\xx-1.3,1.15) {\num};
+      \node[idea note,anchor=east,font=\fontsize{6}{8}\selectfont] at (\xx+1.3,1.15) {\en};
+    }
+    \node[font=\bfseries\small,text=IdeaInk] at (3,.65) {表征构建};
+    \node[font=\bfseries\small,text=IdeaInk] at (7,.65) {条件交互};
+    \node[font=\bfseries\small,text=IdeaInk] at (11,.65) {任务输出};
+    \node[idea data,text width=21mm,minimum height=10mm] (a) at (3,-.15) {$z=f_\theta(x)$};
+    \node[idea solid,text width=21mm,minimum height=10mm] (b) at (7,-.15) {$h=g_\phi(z,c)$};
+    \node[idea result,text width=21mm,minimum height=10mm] (c) at (11,-.15) {$\hat y=q_\psi(h)$};
+    \node[idea note] at (3,-.9) {编码\quad /\quad 对齐};
+    \node[idea note] at (7,-.9) {融合\quad /\quad 约束};
+    \node[idea note] at (11,-.9) {预测\quad /\quad 评估};
+    \draw[idea arrow,draw=IdeaBlue] (x.east)--++(.35,0)|-(a.west);
+    \draw[idea arrow,draw=IdeaBlue] (a)--node[idea note,above]{$z$}(b);
+    \draw[idea arrow,draw=IdeaTeal] (b)--node[idea note,above]{$h$}(c);
+    \draw[idea feedback,draw=IdeaCoral] (11,-1.3)--(11,-1.9)--(3,-1.9)--(3,-1.3);
+    \node[idea note,text=IdeaCoral!85!black,fill=IdeaCanvas,inner xsep=3mm] at (7,-1.9)
+      {$\mathcal L=\mathcal L_{\mathrm{task}}+\lambda\mathcal L_{\mathrm{reg}}$};
+    \node[idea note,font=\fontsize{7}{10}\selectfont] at (7,-2.15) {训练反馈\quad /\quad 任务监督与约束联合优化};
+  \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+% 05 模块 A：大图 + 窄侧栏，可复制作为模块详情页。
+\begin{frame}{表征构建}
+  \framesubtitle{模块 A\quad /\quad 从多源输入到统一特征空间}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{.68\textwidth}
+      \centering
+      \begin{tikzpicture}[y=1.4cm]
+        \node[idea data,text width=18mm] (x1) at (0,1) {输入视图 1\\$x_1$};
+        \node[idea data,text width=18mm] (x2) at (0,-1) {输入视图 2\\$x_2$};
+        \node[idea data,text width=21mm] (e1) at (3,1) {编码器 $f_1$\\特征 $z_1$};
+        \node[idea data,text width=21mm] (e2) at (3,-1) {编码器 $f_2$\\特征 $z_2$};
+        \node[idea data,fill=IdeaBlue!22!white,text width=20mm,minimum height=19mm] (z) at (6.2,0) {对齐 / 聚合\\[3pt]统一表征 $z$};
+        \draw[idea arrow,draw=IdeaBlue] (x1)--(e1);
+        \draw[idea arrow,draw=IdeaBlue] (x2)--(e2);
+        \draw[idea arrow,draw=IdeaBlue] (e1.east)--++(.4,0)|-(z.150);
+        \draw[idea arrow,draw=IdeaBlue] (e2.east)--++(.4,0)|-(z.210);
+      \begin{scope}[on background layer]\node[idea panel,fit=(x1)(x2)(e1)(e2)(z),inner sep=7pt] {};\end{scope}
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{.28\textwidth}
+      \Tag{设计说明}
+      \small\textbf{输入}\par [来源、维度、预处理]\par\vspace{3mm}
+      \textbf{关键选择}\par [为什么采用该编码方式]\par\vspace{3mm}
+      \textbf{输出}\par $z\in\mathbb R^d$，供模块 B 使用
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% 06 模块 B：两路输入 / 融合 / 残差结构。
+\begin{frame}{条件感知的特征交互}
+  \framesubtitle{模块 B\quad /\quad 条件调制与残差融合的架构示例}
+  \begin{center}
+  \begin{tikzpicture}[y=1.4cm]
+    \node[idea data,text width=20mm] (z) at (0,0) {输入表征 $z$};
+    \node[idea data,text width=26mm] (p) at (3.3,0) {特征变换\\$u=Pz$};
+    \node[idea solid,text width=28mm] (g) at (7.1,0) {条件调制\\$v=\gamma(c)\odot u$};
+    \node[idea result,text width=21mm] (h) at (10.7,0) {融合输出\\$h=u+v$};
+    \node[idea condition,text width=26mm] (cond) at (7.1,1.55) {条件编码 $\gamma(c)$};
+    \draw[idea arrow,draw=IdeaBlue] (z)--(p);
+    \draw[idea arrow] (p)--(g);
+    \draw[idea arrow,draw=IdeaTeal] (g)--(h);
+    \draw[idea arrow,draw=IdeaAmber] (cond)--(g);
+    \draw[idea arrow,draw=IdeaBlue] (p.south)--(3.3,-1.15)--node[idea note,below]{保留原始特征的残差路径}(10.7,-1.15)--(h.south);
+  \coordinate (lower) at (7,-1.65);
+  \begin{scope}[on background layer]\node[idea panel,fit=(z)(p)(g)(h)(cond)(lower),inner sep=7pt] {};\end{scope}
+      \end{tikzpicture}
+  \end{center}
+  % 架构示例：u,v,h,gamma(c) 同属 R^d；odot 为逐元素乘法。
+\end{frame}
+
+% 07 闭环结构：可用于主动学习 / 优化 / 迭代设计。
+\begin{frame}{从预测到验证的闭环}
+  \framesubtitle{模块 C\quad /\quad 选择、验证与反馈更新}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{.66\textwidth}
+      \centering
+      \begin{tikzpicture}[y=1.4cm]
+        \node[idea result,text width=26mm,minimum height=13mm] (a) at (0,1.05) {模型预测\\候选及不确定性};
+        \node[idea condition,text width=26mm,minimum height=13mm] (b) at (4.5,1.05) {候选选择\\约束与采样策略};
+        \node[idea validation,text width=26mm,minimum height=13mm] (c) at (4.5,-1.2) {独立验证\\实验 / 仿真};
+        \node[idea data,text width=26mm,minimum height=13mm] (d) at (0,-1.2) {更新训练集\\重新训练};
+        \draw[idea arrow,draw=IdeaTeal] (a)--(b);
+        \draw[idea arrow,draw=IdeaAmber] (b)--(c);
+        \draw[idea feedback,draw=IdeaCoral] (c)--(d);
+        \draw[idea feedback,draw=IdeaBlue] (d)--(a);
+      \begin{scope}[on background layer]\node[idea panel,fit=(a)(b)(c)(d),inner sep=7pt] {};\end{scope}
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{.30\textwidth}
+      \Tag{闭环边界}
+      \small\textbf{选择规则}\par [目标与约束如何权衡]\par\vspace{3mm}
+      \textbf{停止条件}\par [预算耗尽 / 达到阈值]\par\vspace{3mm}
+      \textbf{评价边界}\par 独立测试集不参与反馈
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% 08 训练与推理泳道图。
+\begin{frame}{训练与推理}
+  \framesubtitle{区分参数学习与模型部署，明确数据使用边界}
+  \begin{center}
+  \begin{tikzpicture}[y=1.4cm]
+    \node[idea note,font=\small\bfseries,text=IdeaPurple] at (-1.1,1) {训练};
+    \node[idea note,font=\small\bfseries,text=IdeaPurple] at (-1.1,-1.4) {推理};
+    \node[idea data,text width=25mm] (tr) at (1,1) {训练输入及标签\\$(x,c,y)$};
+    \node[idea primary,text width=28mm] (mo) at (5.1,1) {前向预测 + 损失\\更新 $\theta,\phi,\psi$};
+    \node[idea validation,text width=25mm] (ck) at (9.3,1) {验证集选型\\冻结参数};
+    \node[idea data,text width=25mm] (te) at (1,-1.4) {新输入\\$(x_{\mathrm{new}},c_{\mathrm{new}})$};
+    \node[idea primary,text width=28mm] (fix) at (5.1,-1.4) {固定模型\\不使用测试标签};
+    \node[idea result,text width=25mm] (out) at (9.3,-1.4) {输出结果\\预测 / 候选};
+    \draw[idea arrow,draw=IdeaBlue] (tr)--(mo);
+    \draw[idea arrow,draw=IdeaCoral] (mo)--(ck);
+    \draw[idea arrow,draw=IdeaBlue] (te)--(fix);
+    \draw[idea arrow,draw=IdeaTeal] (fix)--(out);
+    \draw[idea feedback,draw=IdeaCoral] (ck.south)--++(0,-.5)-|(fix.north);
+  \begin{scope}[on background layer]\node[idea panel,fit=(tr)(mo)(ck)(te)(fix)(out),inner sep=7pt] {};\end{scope}
+      \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\IdeaSection{03}{EVIDENCE}{创新与验证}
+% 09 创新点：不把组件罗列当作创新。
+\begin{frame}{预期创新与证据对应}
+  \framesubtitle{新颖性需经文献核查；有效性需经实验验证}
+  \renewcommand{\arraystretch}{1.55}
+  \small
+  \Surface{\begin{tabularx}{\linewidth}{@{}p{22mm}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X@{}}
+    \toprule
+    \textcolor{IdeaPurple}{设计层面} & \textcolor{IdeaPurple}{已有处理} & \textcolor{IdeaPurple}{提出的改变} & \textcolor{IdeaPurple}{验证方式}\\
+    \midrule
+    表征 / 模块 A & [基线表征] & [信息与归纳偏置] & 表征对照、等参数量\\
+    交互 / 模块 B & [常规融合机制] & [具体算子或结构] & 交互消融与机制分析\\
+    验证 / 模块 C & [现有验证协议] & [边界或闭环策略] & 独立测试、等预算\\
+    \bottomrule
+  \end{tabularx}}
+  \vfill
+  \Takeaway{[最重要的贡献是什么，哪些设计为其提供支撑。]}
+\end{frame}
+
+% 10 实验设计：按研究问题组织。
+\begin{frame}{三个问题，三组实验}
+  \framesubtitle{围绕有效性、必要性与适用边界建立验证方案}
+  \renewcommand{\arraystretch}{1.5}
+  \small
+  \Surface{\begin{tabularx}{\linewidth}{@{}p{10mm}Xp{32mm}p{30mm}@{}}
+    \toprule
+    & \textcolor{IdeaPurple}{研究问题} & \textcolor{IdeaPurple}{对照设计} & \textcolor{IdeaPurple}{证据 / 指标}\\
+    \midrule
+    RQ1 & 整体方法是否有效？ & 代表基线、同预算 & 主指标与成本\\
+    RQ2 & 核心模块是否必要？ & 完整模型与关键消融 & 指标变化、机制分析\\
+    RQ3 & 在什么条件下失效？ & 域外 / 噪声 / 少样本 & 泛化差距、失败案例\\
+    \bottomrule
+  \end{tabularx}}
+  \vspace{4mm}
+  \Hint{数据：[样本量与划分]\quad 重复：[次数]\quad 预算：[填写]}
+  \vfill
+  \Takeaway{所有对照使用一致的数据边界和评价协议，避免泄漏与预算不公平。}
+\end{frame}
+
+% 11 结果表：不填入虚构数据；完成实验后替换“待填”。
+\begin{frame}{主要实验结果}
+  \framesubtitle{统一评价协议下的性能、稳定性与计算成本 · 结果待填}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.66\textwidth}
+      \small\renewcommand{\arraystretch}{1.4}
+      \Surface{\begin{tabularx}{\linewidth}{@{}Xccc@{}}
+        \toprule
+        方法 & 误差 $\downarrow$ & 成功率 $\uparrow$ & 成本 $\downarrow$\\
+        \midrule
+        基线 1 & \Pending & \Pending & \Pending\\
+        基线 2 & \Pending & \Pending & \Pending\\
+        \textcolor{IdeaPurple}{提出的方法} & \Pending & \Pending & \Pending\\
+        \bottomrule
+      \end{tabularx}}
+      \vspace{1.5mm}
+      \Hint{统计：[均值与波动]\quad 重复：[次数]}
+    \end{column}
+    \begin{column}{.29\textwidth}
+      \Tag{结果解读}
+      \small\textbf{观察}\par [实际提升或退化]\par\vspace{3mm}
+      \textbf{解释}\par [证据支持的机制]\par\vspace{3mm}
+      \textbf{边界}\par [尚不能支持的结论]
+    \end{column}
+  \end{columns}
+  \vfill
+  \Takeaway{[填写真实结果支持的结论，并保留必要的适用条件。]}
+\end{frame}
+
+% 12 结果图版式：原生 TikZ 示意曲线；无真实测量值。
+\begin{frame}{性能变化来自哪里}
+  \framesubtitle{消融实验与机制分析 · 曲线仅为版式示意，非实验数据}
+  \begin{columns}[c,onlytextwidth]
+    \begin{column}{.56\textwidth}
+      \centering
+      \begin{tikzpicture}
+        \fill[white,rounded corners=3pt] (-.45,-.8) rectangle (6.6,3.85);
+        \foreach \yy in {1,2,3} {\draw[IdeaLine!65,line width=.3pt] (0,\yy)--(6,\yy);}
+        \draw[->,draw=IdeaGray] (0,0)--(6.25,0) node[below,idea note]{预算};
+        \draw[->,draw=IdeaGray] (0,0)--(0,3.55) node[above,idea note]{性能};
+        \draw[IdeaGray,dashed,line width=1pt] plot[smooth] coordinates {(.3,.4)(1.4,1)(2.6,1.35)(4,1.55)(5.7,1.6)};
+        \draw[IdeaPurple,line width=1.4pt] plot[smooth] coordinates {(.3,.5)(1.4,1.3)(2.6,2)(4,2.5)(5.7,2.7)};
+        \node[idea note,text=IdeaPurple,anchor=east] at (5.8,2.95) {完整模型（示意）};
+        \node[idea note,anchor=east] at (5.8,1.25) {消融模型（示意）};
+        \node[idea note] at (3,-.65) {仅展示图形样式 · 无真实数值};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{.39\textwidth}
+      \Tag{消融表}
+      \small\renewcommand{\arraystretch}{1.4}
+      \Surface{\begin{tabularx}{\linewidth}{@{}Xc@{}}
+        \toprule 变体 & 主指标\\\midrule
+        完整方法 & \Pending\\
+        移除模块 B & \Pending\\
+        替换为简单融合 & \Pending\\
+        移除约束项 & \Pending\\\bottomrule
+      \end{tabularx}}
+      \vspace{3mm}
+      \Hint{控制：划分、预算、调参协议。}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\IdeaSection{04}{DISCUSSION}{讨论与决策}
+% 13 讨论页：等高状态卡片，突出一个待决定的问题。
+\begin{frame}{下一步，验证最关键的假设}
+  \framesubtitle{当前证据、主要风险与最小验证实验}
+  \begin{columns}[T,onlytextwidth]
+    \begin{column}{.315\textwidth}
+      \IdeaCard[29mm]{01 / OBSERVED}{已有证据}{[调研或实验结论]\par\vspace{3mm}\Hint{依据：[记录 / 图表]}}
+    \end{column}
+    \begin{column}{.315\textwidth}
+      \IdeaCard[29mm]{02 / UNKNOWN}{关键不确定性}{[核心假设的风险]\par\vspace{3mm}\Hint{影响：[结论 / 可行性]}}
+    \end{column}
+    \begin{column}{.315\textwidth}
+      \IdeaCard[29mm]{03 / NEXT}{最小验证实验}{[最先执行的实验]\par\vspace{3mm}\Hint{周期：[填写]\quad 判据：[填写]}}
+    \end{column}
+  \end{columns}
+  \vfill
+  \Takeaway{待讨论：[继续推进该方向之前，最需要确认哪一项判断？]}
+\end{frame}
+
+% 14 多分支组件示例：颜色编码职责，文字与线型提供冗余信息。
+\IdeaSection{05}{TOOLKIT}{备用页}
+\begin{frame}{用颜色组织复杂框架}
+  \framesubtitle{同一职责保持同色；模块名称与线型共同解释信息流}
+  \begin{center}
+  \begin{tikzpicture}[y=1.35cm]
+    \node[idea data,text width=22mm] (x1) at (0,.5) {主输入 / 表征\\$z_1$};
+    \node[idea data,text width=22mm] (x2) at (0,-1.05) {辅助输入 / 表征\\$z_2$};
+    \node[idea condition,text width=26mm] (prior) at (4.1,1.1) {条件 / 先验\\$c$};
+    \node[idea solid,text width=26mm,minimum height=13mm] (core) at (4.1,-.55) {核心交互模块\\$h=g(z_1,z_2,c)$};
+    \node[idea result,text width=20mm] (y1) at (8,.5) {任务头 1\\$\hat y_1$};
+    \node[idea result,text width=20mm] (y2) at (8,-1.05) {任务头 2\\$\hat y_2$};
+    \node[idea validation,text width=19mm,minimum height=13mm] (eval) at (11.3,-.25) {验证 / 监督\\$\mathcal L$};
+    \draw[idea arrow,draw=IdeaBlue] (x1.east)--++(.45,0)|-(core.160);
+    \draw[idea arrow,draw=IdeaBlue] (x2.east)--++(.45,0)|-(core.200);
+    \draw[idea arrow,draw=IdeaAmber] (prior)--(core);
+    \draw[idea arrow] (core.east)--++(.4,0)|-(y1.west);
+    \draw[idea arrow] (core.east)--++(.4,0)|-(y2.west);
+    \draw[idea arrow,draw=IdeaTeal] (y1.east)--++(.25,0)|-(eval.150);
+    \draw[idea arrow,draw=IdeaTeal] (y2.east)--++(.25,0)|-(eval.210);
+    \draw[idea feedback,draw=IdeaCoral] (eval.south)--(11.3,-2.0)--node[idea note,below,text=IdeaCoral!85!black]{训练反馈}(4.1,-2.0)--(core.south);
+  \end{tikzpicture}
+  \end{center}
+  \vfill
+  \begin{center}
+  \begin{tikzpicture}
+    \foreach \xx/\tone/\label in {0/IdeaBlue/数据与表征,2.65/IdeaPurple/核心交互,5.3/IdeaAmber/条件与约束,7.95/IdeaTeal/任务输出,10.6/IdeaCoral/验证与反馈}{
+      \fill[\tone,rounded corners=1pt] (\xx,0) rectangle ++(.18,.18);
+      \node[idea note,anchor=west,text=IdeaInk] at (\xx+.25,.09) {\label};
+    }
+  \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\end{document}

@@ -1,0 +1,101 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{idea-theme}[2026/09/22 Modern research idea presentation]
+\RequirePackage[UTF8,fontset=fandol]{ctex}
+\RequirePackage{tikz}
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,backgrounds}
+\setsansfont{texgyreheros-regular.otf}[BoldFont=texgyreheros-bold.otf,ItalicFont=texgyreheros-italic.otf,BoldItalicFont=texgyreheros-bolditalic.otf]
+
+% 用户指定主色；所有辅助紫色由此混合得到。
+\definecolor{IdeaPurple}{cmyk}{0.50,1.00,0.00,0.40}
+% 方法图的语义辅助色：同一职责在不同页面保持同色。
+\definecolor{IdeaBlue}{HTML}{3973B9}
+\definecolor{IdeaTeal}{HTML}{258579}
+\definecolor{IdeaAmber}{HTML}{B78028}
+\definecolor{IdeaCoral}{HTML}{BF665D}
+\definecolor{IdeaInk}{RGB}{38,34,47}
+\definecolor{IdeaGray}{RGB}{111,106,123}
+\definecolor{IdeaCanvas}{RGB}{247,246,250}
+\colorlet{IdeaPale}{IdeaPurple!5!white}
+\colorlet{IdeaLine}{IdeaPurple!13!white}
+\setbeamercolor{normal text}{fg=IdeaInk,bg=IdeaCanvas}
+\setbeamercolor{structure}{fg=IdeaPurple}
+\setbeamercolor{alerted text}{fg=IdeaPurple}
+\setbeamercolor{frametitle}{fg=IdeaInk}
+\setbeamerfont{title}{size=\fontsize{29}{36}\selectfont,series=\bfseries}
+\setbeamerfont{frametitle}{size=\fontsize{12}{15}\selectfont,series=\bfseries}
+\setbeamerfont{framesubtitle}{size=\fontsize{7}{9}\selectfont,series=\mdseries}
+\setbeamersize{text margin left=10mm,text margin right=10mm}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\small\raisebox{.15ex}{\(\bullet\)}}
+\setlength{\heavyrulewidth}{.5pt}
+\setlength{\lightrulewidth}{.25pt}
+\newcommand{\ChapterNumber}{01}
+\newcommand{\ChapterEnglish}{RESEARCH IDEA}
+\newcommand{\IdeaSection}[3]{\section{#3}\gdef\ChapterNumber{#1}\gdef\ChapterEnglish{#2}}
+\newcommand{\LetterLabel}[1]{{\fontsize{7}{9}\selectfont\addfontfeatures{LetterSpace=10}#1}}
+\setbeamertemplate{frametitle}{%
+  \vspace{.5mm}%
+  \noindent\begin{minipage}[b]{.76\textwidth}
+    \usebeamerfont{frametitle}\insertframetitle
+  \end{minipage}\hfill
+  \begin{minipage}[b]{.23\textwidth}
+    \raggedleft\color{IdeaPurple}\fontsize{6.5}{8}\selectfont\addfontfeatures{LetterSpace=10}\ChapterNumber\quad /\quad\ChapterEnglish
+  \end{minipage}\par
+  \ifx\insertframesubtitle\@empty\else
+    \vspace{.5mm}{\usebeamerfont{framesubtitle}\color{IdeaGray}\insertframesubtitle\par}%
+  \fi
+  \vspace{1.2mm}{\color{IdeaLine}\hrule height .3pt}\vspace{1mm}%
+}
+\setbeamertemplate{footline}{%
+  \hspace{10mm}\parbox{\dimexpr\paperwidth-20mm\relax}{%
+    \color{IdeaGray}\fontsize{6.5}{8}\selectfont
+    \insertshorttitle\hfill\insertsectionhead\hspace{6mm}%
+    {\color{IdeaPurple}\rule[.3ex]{4mm}{.65pt}\hspace{2mm}\insertframenumber}%
+    \textcolor{IdeaGray!65}{\,/\,\inserttotalframenumber}\par\vspace{3mm}%
+  }%
+}
+\newcommand{\Tag}[1]{{\color{IdeaPurple}\fontsize{9}{12}\selectfont\bfseries #1\par}\vspace{2mm}}
+\newcommand{\Hint}[1]{{\color{IdeaGray}\fontsize{8}{11}\selectfont #1\par}}
+\newcommand{\Takeaway}[1]{%
+  \par\noindent\begin{tikzpicture}
+    \node[fill=IdeaPurple!5!white,rounded corners=3pt,inner xsep=3mm,inner ysep=2mm,
+      text width=\dimexpr\linewidth-6mm\relax,align=left,font=\fontsize{9}{12}\selectfont]
+      {\textcolor{IdeaPurple}{\textbf{关键判断}}\hspace{3mm}#1};
+  \end{tikzpicture}\par}
+\newcommand{\Pending}{\textcolor{IdeaGray}{待填}}
+\newcommand{\Surface}[1]{%
+  \begin{tikzpicture}
+    \node[fill=white,draw=IdeaLine!60,rounded corners=5pt,line width=.4pt,inner sep=3mm]
+      {\begin{minipage}{\dimexpr\linewidth-6mm-.8pt\relax}#1\end{minipage}};
+  \end{tikzpicture}}
+% 固定高卡片保证列间对齐；高度指内层正文盒，另有上下各 4mm 留白。
+\newcommand{\IdeaCard}[4][30mm]{%
+  \begin{tikzpicture}
+    \node[fill=white,draw=IdeaLine!60,rounded corners=5pt,line width=.4pt,inner sep=4mm]
+    {\begin{minipage}[t][#1][t]{\dimexpr\linewidth-8mm-.8pt\relax}
+      {\color{IdeaGray}\LetterLabel{#2}\par}\vspace{2.5mm}
+      {\color{IdeaInk}\fontsize{12}{16}\selectfont\bfseries #3\par}\vspace{2.5mm}
+      {\small #4\par}
+    \end{minipage}};
+  \end{tikzpicture}}
+\tikzset{
+  idea box/.style={draw=IdeaLine,fill=white,rounded corners=3pt,
+    line width=.55pt,align=center,inner sep=5pt,
+    font=\fontsize{9}{12}\selectfont,text=IdeaInk},
+  idea primary/.style={idea box,draw=IdeaPurple!25,fill=IdeaPale},
+  idea solid/.style={idea box,draw=IdeaPurple,fill=IdeaPurple,text=white},
+  idea io/.style={idea box,draw=IdeaLine,fill=white},
+  idea data/.style={idea box,draw=IdeaBlue!55,fill=IdeaBlue!11!white},
+  idea condition/.style={idea box,draw=IdeaAmber!60,fill=IdeaAmber!15!white},
+  idea result/.style={idea box,draw=IdeaTeal!55,fill=IdeaTeal!12!white},
+  idea validation/.style={idea box,draw=IdeaCoral!60,fill=IdeaCoral!13!white},
+  idea arrow/.style={-{Stealth[length=1.7mm,width=1.2mm]},line width=.65pt,draw=IdeaPurple!75},
+  idea feedback/.style={idea arrow,dash pattern=on 2pt off 2pt,draw=IdeaGray},
+  idea note/.style={font=\fontsize{8}{11}\selectfont,text=IdeaGray,align=center},
+  idea group/.style={draw=IdeaLine,fill=white,rounded corners=5pt,inner sep=10pt},
+  idea panel/.style={fill=white,draw=IdeaLine!60,rounded corners=5pt,line width=.4pt},
+  idea number/.style={font=\fontsize{22}{24}\selectfont,text=IdeaPurple!20,anchor=west},
+}
+\hypersetup{colorlinks=true,urlcolor=IdeaPurple,linkcolor=IdeaPurple}
