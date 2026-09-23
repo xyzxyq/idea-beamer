@@ -15,6 +15,9 @@
 \definecolor{IdeaAmber}{HTML}{B78028}
 \definecolor{IdeaCoral}{HTML}{BF665D}
 \definecolor{IdeaNovel}{HTML}{B32672}
+\definecolor{IdeaCyan}{HTML}{248C9E}
+\definecolor{IdeaIndigo}{HTML}{6967AC}
+\definecolor{IdeaOlive}{HTML}{7C873C}
 \definecolor{IdeaInk}{RGB}{38,34,47}
 \definecolor{IdeaGray}{RGB}{111,106,123}
 \definecolor{IdeaCanvas}{RGB}{247,246,250}
@@ -26,7 +29,6 @@
 \setbeamercolor{frametitle}{fg=IdeaInk}
 \setbeamerfont{title}{size=\fontsize{29}{36}\selectfont,series=\bfseries}
 \setbeamerfont{frametitle}{size=\fontsize{12}{15}\selectfont,series=\bfseries}
-\setbeamerfont{framesubtitle}{size=\fontsize{7}{9}\selectfont,series=\mdseries}
 \setbeamersize{text margin left=10mm,text margin right=10mm}
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{itemize item}{\small\raisebox{.15ex}{\(\bullet\)}}
@@ -38,15 +40,7 @@
 \newcommand{\LetterLabel}[1]{{\fontsize{7}{9}\selectfont\addfontfeatures{LetterSpace=10}#1}}
 \setbeamertemplate{frametitle}{%
   \vspace{.5mm}%
-  \noindent\begin{minipage}[b]{.76\textwidth}
-    \usebeamerfont{frametitle}\insertframetitle
-  \end{minipage}\hfill
-  \begin{minipage}[b]{.23\textwidth}
-    \raggedleft\color{IdeaPurple}\fontsize{6.5}{8}\selectfont\addfontfeatures{LetterSpace=10}\ChapterNumber\quad /\quad\ChapterEnglish
-  \end{minipage}\par
-  \ifx\insertframesubtitle\@empty\else
-    \vspace{.5mm}{\usebeamerfont{framesubtitle}\color{IdeaGray}\insertframesubtitle\par}%
-  \fi
+  {\usebeamerfont{frametitle}\insertframetitle\par}
   \vspace{1.2mm}{\color{IdeaLine}\hrule height .3pt}\vspace{1mm}%
 }
 \setbeamertemplate{footline}{%
@@ -57,12 +51,12 @@
     \textcolor{IdeaGray!65}{\,/\,\inserttotalframenumber}\par\vspace{3mm}%
   }%
 }
-\newcommand{\Tag}[1]{{\color{IdeaPurple}\fontsize{9}{12}\selectfont\bfseries #1\par}\vspace{2mm}}
-\newcommand{\Hint}[1]{{\color{IdeaGray}\fontsize{8}{11}\selectfont #1\par}}
+\newcommand{\Tag}[1]{{\color{IdeaPurple}\small\bfseries #1\par}\vspace{2mm}}
+\newcommand{\Hint}[1]{{\color{IdeaGray}\footnotesize #1\par}}
 \newcommand{\Takeaway}[1]{%
   \par\noindent\begin{tikzpicture}
     \node[fill=IdeaPurple!5!white,rounded corners=3pt,inner xsep=3mm,inner ysep=2mm,
-      text width=\dimexpr\linewidth-6mm\relax,align=left,font=\fontsize{9}{12}\selectfont]
+      text width=\dimexpr\linewidth-6mm\relax,align=left,font=\small]
       {\textcolor{IdeaPurple}{\textbf{关键判断}}\hspace{3mm}#1};
   \end{tikzpicture}\par}
 \newcommand{\Pending}{\textcolor{IdeaGray}{待填}}
@@ -77,14 +71,15 @@
     \node[fill=white,draw=IdeaLine!60,rounded corners=5pt,line width=.4pt,inner sep=4mm]
     {\begin{minipage}[t][#1][t]{\dimexpr\linewidth-8mm-.8pt\relax}
       {\color{IdeaGray}\LetterLabel{#2}\par}\vspace{2.5mm}
-      {\color{IdeaInk}\fontsize{12}{16}\selectfont\bfseries #3\par}\vspace{2.5mm}
+      {\color{IdeaInk}\normalsize\bfseries #3\par}\vspace{2.5mm}
       {\small #4\par}
     \end{minipage}};
   \end{tikzpicture}}
+% 图字号继承当前页面，可在整图或单个节点用 font=... 覆盖。
 \tikzset{
+  idea diagram/.style={font=\small},
   idea box/.style={draw=IdeaLine,fill=white,rounded corners=3pt,
-    line width=.55pt,align=center,inner sep=5pt,
-    font=\fontsize{9}{12}\selectfont,text=IdeaInk},
+    line width=.55pt,align=center,inner sep=4pt,text=IdeaInk},
   idea primary/.style={idea box,draw=IdeaPurple!25,fill=IdeaPale},
   idea solid/.style={idea box,draw=IdeaPurple,fill=IdeaPurple,text=white},
   idea io/.style={idea box,draw=IdeaLine,fill=white},
@@ -92,19 +87,38 @@
   idea condition/.style={idea box,draw=IdeaAmber!60,fill=IdeaAmber!15!white},
   idea result/.style={idea box,draw=IdeaTeal!55,fill=IdeaTeal!12!white},
   idea validation/.style={idea box,draw=IdeaCoral!60,fill=IdeaCoral!13!white},
+  idea feature/.style={idea box,draw=IdeaCyan!60,fill=IdeaCyan!10!white},
+  idea memory/.style={idea box,draw=IdeaIndigo!60,fill=IdeaIndigo!10!white},
+  idea selection/.style={idea box,draw=IdeaOlive!60,fill=IdeaOlive!12!white},
   % 创新属于贡献属性，可用于任何职责的模块；标签确保含义不只依赖颜色。
   idea innovation/.style={idea box,draw=IdeaNovel,fill=IdeaNovel!10!white,line width=1.1pt,
-    inner ysep=13pt,
+    inner ysep=10pt,
     % path picture 按父节点轮廓裁切；角标与外框共用右上圆角。
     path picture={\node[text width=,minimum size=0pt,
       font=\fontsize{5.5}{6.5}\selectfont,text=white,fill=IdeaNovel,
       rounded corners=1pt,inner xsep=2.5pt,inner ysep=1pt,outer sep=0pt,
       anchor=north east] at (path picture bounding box.north east) {创新};}},
-  idea arrow/.style={-{Stealth[length=1.7mm,width=1.2mm]},line width=.65pt,draw=IdeaPurple!75},
+  idea arrow/.style={-{Stealth[length=1.7mm,width=1.2mm]},line width=.6pt,draw=IdeaPurple!75,rounded corners=1.5pt,line cap=round,line join=round},
+  idea bus/.style={idea arrow,-},
+  idea junction/.style={circle,fill=IdeaPurple,draw=none,inner sep=0pt,minimum size=2.2pt,outer sep=0pt},
+  idea edge label/.style={idea note,fill=IdeaCanvas,inner sep=1.5pt},
+  % 仅在确实无法避开的交叉处局部使用；底色需与交叉区域背景一致。
+  idea crossing/.style={preaction={draw=IdeaCanvas,line width=2.4pt,arrows=-,solid}},
   idea feedback/.style={idea arrow,dash pattern=on 2pt off 2pt,draw=IdeaGray},
-  idea note/.style={font=\fontsize{8}{11}\selectfont,text=IdeaGray,align=center},
+  idea note/.style={font=\scriptsize,text=IdeaGray,align=center},
   idea group/.style={draw=IdeaLine,fill=white,rounded corners=5pt,inner sep=10pt},
+  % fit 根据被包围节点的实际尺寸计算边界；在 background layer 上绘制。
+  idea dashed group/.style={idea group,dash pattern=on 3pt off 2pt,
+    draw=IdeaGray!65,fill=IdeaCanvas,line width=.6pt,inner sep=7pt},
+  idea group label/.style={font=\scriptsize,text=IdeaGray,anchor=south west,inner sep=1pt},
   idea panel/.style={fill=white,draw=IdeaLine!60,rounded corners=5pt,line width=.4pt},
   idea number/.style={font=\fontsize{22}{24}\selectfont,text=IdeaPurple!20,anchor=west},
 }
 \hypersetup{colorlinks=true,urlcolor=IdeaPurple,linkcolor=IdeaPurple}
+
+% 命名通道决定折线的 x / y；源、目标均传明确端口，不含括号。
+% 手工指定空白通道，不声称自动避障；每条连线最多两个直角弯。
+\newcommand{\IdeaRouteX}[4][]{%
+  \draw[idea arrow,#1] (#2)--(#4 |- #2)--(#4 |- #3)--(#3);}
+\newcommand{\IdeaRouteY}[4][]{%
+  \draw[idea arrow,#1] (#2)--(#2 |- #4)--(#3 |- #4)--(#3);}
