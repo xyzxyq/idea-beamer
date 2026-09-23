@@ -14,6 +14,7 @@
 \definecolor{IdeaTeal}{HTML}{258579}
 \definecolor{IdeaAmber}{HTML}{B78028}
 \definecolor{IdeaCoral}{HTML}{BF665D}
+\definecolor{IdeaNovel}{HTML}{B32672}
 \definecolor{IdeaInk}{RGB}{38,34,47}
 \definecolor{IdeaGray}{RGB}{111,106,123}
 \definecolor{IdeaCanvas}{RGB}{247,246,250}
@@ -91,6 +92,14 @@
   idea condition/.style={idea box,draw=IdeaAmber!60,fill=IdeaAmber!15!white},
   idea result/.style={idea box,draw=IdeaTeal!55,fill=IdeaTeal!12!white},
   idea validation/.style={idea box,draw=IdeaCoral!60,fill=IdeaCoral!13!white},
+  % 创新属于贡献属性，可用于任何职责的模块；标签确保含义不只依赖颜色。
+  idea innovation/.style={idea box,draw=IdeaNovel,fill=IdeaNovel!10!white,line width=1.1pt,
+    inner ysep=13pt,
+    % path picture 按父节点轮廓裁切；角标与外框共用右上圆角。
+    path picture={\node[text width=,minimum size=0pt,
+      font=\fontsize{5.5}{6.5}\selectfont,text=white,fill=IdeaNovel,
+      rounded corners=1pt,inner xsep=2.5pt,inner ysep=1pt,outer sep=0pt,
+      anchor=north east] at (path picture bounding box.north east) {创新};}},
   idea arrow/.style={-{Stealth[length=1.7mm,width=1.2mm]},line width=.65pt,draw=IdeaPurple!75},
   idea feedback/.style={idea arrow,dash pattern=on 2pt off 2pt,draw=IdeaGray},
   idea note/.style={font=\fontsize{8}{11}\selectfont,text=IdeaGray,align=center},

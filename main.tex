@@ -89,7 +89,7 @@
 \IdeaSection{02}{METHOD}{方法框架}
 % 04 总框架：白色阶段卡片 + 核心模块强调 + 独立训练反馈。
 \begin{frame}{方法框架}
-  \framesubtitle{蓝色表征、紫色交互、青绿输出；珊瑚色表示训练反馈}
+  \framesubtitle{蓝色表征、青绿输出、珊瑚色反馈；玫红标签标出拟议创新}
   \begin{center}
   \begin{tikzpicture}[y=1.4cm]
     \node[idea data,text width=11mm,minimum height=12mm] (x) at (0,0) {输入\\$x,c$};
@@ -102,14 +102,14 @@
     \node[font=\bfseries\small,text=IdeaInk] at (7,.65) {条件交互};
     \node[font=\bfseries\small,text=IdeaInk] at (11,.65) {任务输出};
     \node[idea data,text width=21mm,minimum height=10mm] (a) at (3,-.15) {$z=f_\theta(x)$};
-    \node[idea solid,text width=21mm,minimum height=10mm] (b) at (7,-.15) {$h=g_\phi(z,c)$};
+    \node[idea innovation,text width=21mm,minimum height=10mm] (b) at (7,-.15) {$h=g_\phi(z,c)$};
     \node[idea result,text width=21mm,minimum height=10mm] (c) at (11,-.15) {$\hat y=q_\psi(h)$};
     \node[idea note] at (3,-.9) {编码\quad /\quad 对齐};
     \node[idea note] at (7,-.9) {融合\quad /\quad 约束};
     \node[idea note] at (11,-.9) {预测\quad /\quad 评估};
     \draw[idea arrow,draw=IdeaBlue] (x.east)--++(.35,0)|-(a.west);
     \draw[idea arrow,draw=IdeaBlue] (a)--node[idea note,above]{$z$}(b);
-    \draw[idea arrow,draw=IdeaTeal] (b)--node[idea note,above]{$h$}(c);
+    \draw[idea arrow,draw=IdeaTeal] (b.east)--node[idea note,above]{$h$}(c.west);
     \draw[idea feedback,draw=IdeaCoral] (11,-1.3)--(11,-1.9)--(3,-1.9)--(3,-1.3);
     \node[idea note,text=IdeaCoral!85!black,fill=IdeaCanvas,inner xsep=3mm] at (7,-1.9)
       {$\mathcal L=\mathcal L_{\mathrm{task}}+\lambda\mathcal L_{\mathrm{reg}}$};
@@ -153,13 +153,13 @@
   \begin{tikzpicture}[y=1.4cm]
     \node[idea data,text width=20mm] (z) at (0,0) {输入表征 $z$};
     \node[idea data,text width=26mm] (p) at (3.3,0) {特征变换\\$u=Pz$};
-    \node[idea solid,text width=28mm] (g) at (7.1,0) {条件调制\\$v=\gamma(c)\odot u$};
+    \node[idea innovation,text width=28mm] (g) at (7.1,0) {条件调制\\$v=\gamma(c)\odot u$};
     \node[idea result,text width=21mm] (h) at (10.7,0) {融合输出\\$h=u+v$};
     \node[idea condition,text width=26mm] (cond) at (7.1,1.55) {条件编码 $\gamma(c)$};
     \draw[idea arrow,draw=IdeaBlue] (z)--(p);
-    \draw[idea arrow] (p)--(g);
-    \draw[idea arrow,draw=IdeaTeal] (g)--(h);
-    \draw[idea arrow,draw=IdeaAmber] (cond)--(g);
+    \draw[idea arrow] (p.east)--(g.west);
+    \draw[idea arrow,draw=IdeaTeal] (g.east)--(h.west);
+    \draw[idea arrow,draw=IdeaAmber] (cond.south)--(g.north);
     \draw[idea arrow,draw=IdeaBlue] (p.south)--(3.3,-1.15)--node[idea note,below]{保留原始特征的残差路径}(10.7,-1.15)--(h.south);
   \coordinate (lower) at (7,-1.65);
   \begin{scope}[on background layer]\node[idea panel,fit=(z)(p)(g)(h)(cond)(lower),inner sep=7pt] {};\end{scope}
@@ -342,13 +342,13 @@
 % 14 多分支组件示例：颜色编码职责，文字与线型提供冗余信息。
 \IdeaSection{05}{TOOLKIT}{备用页}
 \begin{frame}{用颜色组织复杂框架}
-  \framesubtitle{同一职责保持同色；模块名称与线型共同解释信息流}
+  \framesubtitle{颜色区分模块职责；玫红边框与标签突出拟议创新}
   \begin{center}
   \begin{tikzpicture}[y=1.35cm]
     \node[idea data,text width=22mm] (x1) at (0,.5) {主输入 / 表征\\$z_1$};
     \node[idea data,text width=22mm] (x2) at (0,-1.05) {辅助输入 / 表征\\$z_2$};
     \node[idea condition,text width=26mm] (prior) at (4.1,1.1) {条件 / 先验\\$c$};
-    \node[idea solid,text width=26mm,minimum height=13mm] (core) at (4.1,-.55) {核心交互模块\\$h=g(z_1,z_2,c)$};
+    \node[idea innovation,text width=26mm,minimum height=13mm] (core) at (4.1,-.55) {核心交互模块\\$h=g(z_1,z_2,c)$};
     \node[idea result,text width=20mm] (y1) at (8,.5) {任务头 1\\$\hat y_1$};
     \node[idea result,text width=20mm] (y2) at (8,-1.05) {任务头 2\\$\hat y_2$};
     \node[idea validation,text width=19mm,minimum height=13mm] (eval) at (11.3,-.25) {验证 / 监督\\$\mathcal L$};
@@ -365,7 +365,7 @@
   \vfill
   \begin{center}
   \begin{tikzpicture}
-    \foreach \xx/\tone/\label in {0/IdeaBlue/数据与表征,2.65/IdeaPurple/核心交互,5.3/IdeaAmber/条件与约束,7.95/IdeaTeal/任务输出,10.6/IdeaCoral/验证与反馈}{
+    \foreach \xx/\tone/\label in {0/IdeaBlue/数据表征,2.15/IdeaPurple/常规交互,4.3/IdeaAmber/条件约束,6.45/IdeaTeal/任务输出,8.6/IdeaCoral/验证反馈,10.75/IdeaNovel/创新}{
       \fill[\tone,rounded corners=1pt] (\xx,0) rectangle ++(.18,.18);
       \node[idea note,anchor=west,text=IdeaInk] at (\xx+.25,.09) {\label};
     }
